@@ -10,7 +10,7 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    let calculator = Calculator()
+    private let calculator = Calculator()
     
     @IBOutlet weak var textView: UITextView!
     
@@ -49,7 +49,7 @@ extension ViewController: DisplayDelegate {
     
     func presentAlert() {
         let alertVC = UIAlertController(title: "Erreur", message:
-            "Veuillez entrer une expression correcte !", preferredStyle: .alert)
+                                            "Veuillez entrer une expression correcte !", preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
         return self.present(alertVC, animated: true, completion: nil)
     }

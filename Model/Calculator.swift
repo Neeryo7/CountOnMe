@@ -12,42 +12,41 @@ protocol DisplayDelegate: AnyObject {
     func updateDisplay(text: String)
     func presentAlert()
 }
-
 class Calculator {
     
     weak var delegate: DisplayDelegate?
     
     
-    var elements: [String] = []
+    private var elements: [String] = []
     
     
-    var calcul: String {
+    private var calcul: String {
         return elements.joined()
     }
     
     
     // Cheking des possibles erreurs avant calculs
-    var expressionIsCorrect: Bool {
+    private var expressionIsCorrect: Bool {
         return elements.count >= 3 && expressionHasOperand && !lastElementIsOperand
         && !(calcul.contains("÷0"))
     }
-    var lastElementIsOperand: Bool {
+    private var lastElementIsOperand: Bool {
         guard let lastElement = elements.last else { return false }
         return lastElement == "+" || lastElement == "-" || lastElement == "x" || lastElement == "÷"
     }
-    var lastElementIsNumber: Bool {
+    private var lastElementIsNumber: Bool {
         guard let lastElement = calcul.last else { return false }
         return lastElement.isNumber == true
     }
     
-    var expressionHasOperand: Bool {
+    private var expressionHasOperand: Bool {
         return elements.contains("+") || elements.contains("-") || elements.contains("x")
         || elements.contains("÷")
     }
-    var canAddOperator: Bool {
+    private var canAddOperator: Bool {
         return elements.count != 0 && !lastElementIsOperand
     }
-    var expressionHasResult: Bool {
+    private var expressionHasResult: Bool {
         return elements.contains("=")
     }
     
@@ -58,7 +57,7 @@ class Calculator {
     }
     
     // Fonction qui gère la priorité des calculs (multiplication et divison)
-    func managePriorities() -> [String] {
+    private  func managePriorities() -> [String] {
         var operationsToReduce = elements
         while operationsToReduce.contains("x") || operationsToReduce.contains("÷") {
             if let index = operationsToReduce.firstIndex(where: { $0 == "x" || $0 == "÷" })  {
@@ -84,7 +83,7 @@ class Calculator {
     }
     
     // Fonction qui gère les expressions
-    func performCalcul() {
+    private    func performCalcul() {
         var expression = managePriorities()
         while expression.count > 1 {
             guard let left = Double(expression[0]) else { return }
@@ -106,7 +105,7 @@ class Calculator {
     }
     
     //  Ajout d'un nouveau chiffre à la suite du précédent
-    func joiningNumbers(next: String) {
+    private func joiningNumbers(next: String) {
         guard let lastElement = elements.last else { return }
         let newElement = lastElement + next
         elements.removeLast()
