@@ -35,20 +35,31 @@ class ViewController: UIViewController {
     }
     @IBAction func tappedEqualButton(_ sender: UIButton) {
         calculator.equalButton()
+        textView.scrollToBottom()
     }
 }
 
 // Extension
 
 extension ViewController: DisplayDelegate {
+    
     func updateDisplay(text: String) {
         textView.text = text
     }
+    
     func presentAlert() {
         let alertVC = UIAlertController(title: "Erreur", message:
             "Veuillez entrer une expression correcte !", preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
         return self.present(alertVC, animated: true, completion: nil)
+    }
+}
+
+extension UITextView {
+    func scrollToBottom() {
+        let textCount: Int = text.count
+        guard textCount >= 1 else { return }
+        scrollRangeToVisible(NSRange(location: textCount - 1, length: 1))
     }
 }
 

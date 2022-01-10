@@ -16,12 +16,12 @@ protocol DisplayDelegate: AnyObject {
 class Calculator {
     
     weak var delegate: DisplayDelegate?
-
+    
     
     var elements: [String] = []
-
     
-    var display: String {
+    
+    var calcul: String {
         return elements.joined()
     }
     
@@ -29,20 +29,20 @@ class Calculator {
     // Cheking des possibles erreurs avant calculs
     var expressionIsCorrect: Bool {
         return elements.count >= 3 && expressionHasOperand && !lastElementIsOperand
-        && !(display.contains("/0"))
+        && !(calcul.contains("÷0"))
     }
     var lastElementIsOperand: Bool {
         guard let lastElement = elements.last else { return false }
-        return lastElement == "+" || lastElement == "-" || lastElement == "x" || lastElement == "/"
+        return lastElement == "+" || lastElement == "-" || lastElement == "x" || lastElement == "÷"
     }
     var lastElementIsNumber: Bool {
-        guard let lastElement = display.last else { return false }
+        guard let lastElement = calcul.last else { return false }
         return lastElement.isNumber == true
     }
     
     var expressionHasOperand: Bool {
         return elements.contains("+") || elements.contains("-") || elements.contains("x")
-        || elements.contains("/")
+        || elements.contains("÷")
     }
     var canAddOperator: Bool {
         return elements.count != 0 && !lastElementIsOperand
@@ -60,8 +60,8 @@ class Calculator {
     // Fonction qui gère la priorité des calculs (multiplication et divison)
     func managePriorities() -> [String] {
         var operationsToReduce = elements
-        while operationsToReduce.contains("x") || operationsToReduce.contains("/") {
-            if let index = operationsToReduce.firstIndex(where: { $0 == "x" || $0 == "/" })  {
+        while operationsToReduce.contains("x") || operationsToReduce.contains("÷") {
+            if let index = operationsToReduce.firstIndex(where: { $0 == "x" || $0 == "÷" })  {
                 let operand = operationsToReduce[index]
                 let result: Double
                 if let left = Double(operationsToReduce[index - 1]) {
@@ -83,10 +83,9 @@ class Calculator {
         return operationsToReduce
     }
     
-    //This is the main algorithm which will produce the result from the expression:
+    // Fonction qui gère les expressions
     func performCalcul() {
         var expression = managePriorities()
-        // Iterate over operations while an operand still here:
         while expression.count > 1 {
             guard let left = Double(expression[0]) else { return }
             guard let right = Double(expression[2]) else { return }
@@ -100,17 +99,13 @@ class Calculator {
             expression = Array(expression.dropFirst(3))
             expression.insert(formatResult(result), at: 0)
         }
-        //Add result to elements to update display
+        //Add result to elements to update calcul
         guard let finalResult = expression.first else { return }
         elements.append("=")
         elements.append("\(finalResult)")
     }
     
-    func notifyDisplay() {
-        delegate?.updateDisplay(text: display)
-    }
-    
-    //  Fusion des nombres e l'expression  avec les prochains qui vont être cliquer
+    //  Ajout d'un nouveau chiffre à la suite du précédent
     func joiningNumbers(next: String) {
         guard let lastElement = elements.last else { return }
         let newElement = lastElement + next
@@ -127,7 +122,7 @@ class Calculator {
         } else {
             elements.append(number)
         }
-        notifyDisplay()
+        delegate?.updateDisplay(text: calcul)
     }
     func operandButton(operand: String) {
         if expressionHasResult { // Si il y a déjà un resultat, on commence la nouvelle opération avec celui ci
@@ -135,12 +130,12 @@ class Calculator {
                 elements.removeAll()
                 elements.append("\(result)")
                 elements.append("\(operand)")
-                notifyDisplay()
+                delegate?.updateDisplay(text: calcul)
             }
         } else {
             if canAddOperator {
                 elements.append("\(operand)")
-                notifyDisplay()
+                delegate?.updateDisplay(text: calcul)
             }
         }
     }
@@ -161,14 +156,8 @@ class Calculator {
         // Puis on vérifie si il y a déjà un résultat avant le calcul, du coup le bouton egal ne renvoi rien
         if !expressionHasResult  {
             performCalcul()
-            notifyDisplay()
+            delegate?.updateDisplay(text: calcul)
             return
         }
     }
 }
-
-
-
-
-
-
