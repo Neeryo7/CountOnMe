@@ -25,7 +25,7 @@ class Calculator {
     }
     
     
-    // Cheking des possibles erreurs avant calculs
+    // Check des possibles erreurs avant calculs
     private var expressionIsCorrect: Bool {
         return elements.count >= 3 && expressionHasOperand && !lastElementIsOperand
         && !(calcul.contains("÷0"))
