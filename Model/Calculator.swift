@@ -17,10 +17,10 @@ class Calculator {
     weak var delegate: DisplayDelegate?
     
     
-    private var elements: [String] = []
+    var elements: [String] = []
     
     
-    private var calcul: String {
+    var calcul: String {
         return elements.joined()
     }
     
@@ -57,7 +57,7 @@ class Calculator {
     }
     
     // Fonction qui gère la priorité des calculs (multiplication et divison)
-    private  func managePriorities() -> [String] {
+    private func managePriorities() -> [String] {
         var operationsToReduce = elements
         while operationsToReduce.contains("x") || operationsToReduce.contains("÷") {
             if let index = operationsToReduce.firstIndex(where: { $0 == "x" || $0 == "÷" })  {
@@ -83,7 +83,7 @@ class Calculator {
     }
     
     // Fonction qui gère les expressions
-    private    func performCalcul() {
+    private func performCalcul() {
         var expression = managePriorities()
         while expression.count > 1 {
             guard let left = Double(expression[0]) else { return }
@@ -98,7 +98,6 @@ class Calculator {
             expression = Array(expression.dropFirst(3))
             expression.insert(formatResult(result), at: 0)
         }
-        //Add result to elements to update calcul
         guard let finalResult = expression.first else { return }
         elements.append("=")
         elements.append("\(finalResult)")
