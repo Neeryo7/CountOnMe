@@ -3,7 +3,7 @@
 //  CountOnMe
 //
 //  Created by Aymerik Vallejo on 20/12/2021.
-//  Copyright © 2021 Vincent Saluzzo. All rights reserved.
+//  Copyright © 2022 Aymerik Vallejo. All rights reserved.
 //
 
 import UIKit

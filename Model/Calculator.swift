@@ -3,7 +3,7 @@
 //  CountOnMe
 //
 //  Created by Aymerik Vallejo on 20/12/2021.
-//  Copyright © 2021 Vincent Saluzzo. All rights reserved.
+//  Copyright © 2022 Aymerik Vallejo. All rights reserved.
 //
 
 import Foundation
@@ -60,6 +60,7 @@ class Calculator {
     private func managePriorities() -> [String] {
         var operationsToReduce = elements
         while operationsToReduce.contains("x") || operationsToReduce.contains("÷") {
+            // On utilise une closure pour rechercher si il y a une multiplication ou une division dans le calcul pour lui attribuer un index
             if let index = operationsToReduce.firstIndex(where: { $0 == "x" || $0 == "÷" })  {
                 let operand = operationsToReduce[index]
                 let result: Double
@@ -138,11 +139,18 @@ class Calculator {
         }
     }
     
+    // Fonction qui prend en compte les nombres à virgule
     private func formatResult(_ result: Double) -> String {
         let formatter = NumberFormatter()
         formatter.minimumFractionDigits = 0
         formatter.maximumFractionDigits = 2
         guard let formatedResult = formatter.string(from: NSNumber(value: result)) else { return String() }
+        
+        // Au cas où l'utilisateur utilise un grand nombre, on affiche la puissance
+        guard formatedResult.count <= 10 else {
+                      return String(result)
+                  }
+        
         return formatedResult
     }
     func equalButton() {
